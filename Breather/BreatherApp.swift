@@ -66,13 +66,38 @@ class SceneDelegate: NSObject, UIWindowSceneDelegate {
     private func handleUserActivity(_ userActivity: NSUserActivity) {
         print("Handling activity: \(userActivity.activityType)")
         
-        // Get appName from the intent inside the interaction
-        if let intent = userActivity.interaction?.intent as? BreathingExerciseIntent,
-           let appName = intent.appName {
-            print("Found appName: \(appName)")
+        // First try to get appName from userInfo (we put it there as a String)
+        if let appName = userActivity.userInfo?["appName"] as? String {
+            print("Found appName in userInfo: \(appName)")
             Task { @MainActor in
                 ExerciseState.shared.startExercise(appName: appName)
             }
+            return
+        }
+        
+        // Fallback: get from intent and convert to string
+        if let intent = userActivity.interaction?.intent as? BreathingExerciseIntent {
+            let appName = displayName(for: intent.appName)
+            print("Found appName from intent: \(appName)")
+            Task { @MainActor in
+                ExerciseState.shared.startExercise(appName: appName)
+            }
+        }
+    }
+
+    private func displayName(for app: TargetApp) -> String {
+        switch app {
+        case .instagram: return "Instagram"
+        case .twitter: return "X (Twitter)"
+        case .tiktok: return "TikTok"
+        case .facebook: return "Facebook"
+        case .youtube: return "YouTube"
+        case .reddit: return "Reddit"
+        case .linkedin: return "LinkedIn"
+        case .snapchat: return "Snapchat"
+        case .whatsapp: return "WhatsApp"
+        case .messenger: return "Messenger"
+        case .unknown: return "App"
         }
     }
 }

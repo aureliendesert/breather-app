@@ -42,6 +42,9 @@ class ExerciseState: ObservableObject {
             if let scheme = urlScheme, let url = URL(string: scheme) {
                 UIApplication.shared.open(url)
             }
+        } else {
+            // "I'm good" - go to home screen
+            UIControl().sendAction(#selector(URLSessionTask.suspend), to: UIApplication.shared, for: nil)
         }
         
         isActive = false

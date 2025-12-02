@@ -3,7 +3,131 @@
 <plist version="1.0">
 <dict>
 	<key>INEnums</key>
-	<array/>
+	<array>
+		<dict>
+			<key>INEnumDisplayName</key>
+			<string>App</string>
+			<key>INEnumDisplayNameID</key>
+			<string>A2yjvR</string>
+			<key>INEnumGeneratesHeader</key>
+			<true/>
+			<key>INEnumName</key>
+			<string>TargetApp</string>
+			<key>INEnumType</key>
+			<string>Regular</string>
+			<key>INEnumValues</key>
+			<array>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>unknown</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>5pPvSN</string>
+					<key>INEnumValueName</key>
+					<string>unknown</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Instagram</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>7UM4UW</string>
+					<key>INEnumValueIndex</key>
+					<integer>1</integer>
+					<key>INEnumValueName</key>
+					<string>instagram</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Twitter</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>s0jqHK</string>
+					<key>INEnumValueIndex</key>
+					<integer>2</integer>
+					<key>INEnumValueName</key>
+					<string>twitter</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Tik Tok</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>QlkkCC</string>
+					<key>INEnumValueIndex</key>
+					<integer>3</integer>
+					<key>INEnumValueName</key>
+					<string>tiktok</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Facebook</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>yzf15N</string>
+					<key>INEnumValueIndex</key>
+					<integer>4</integer>
+					<key>INEnumValueName</key>
+					<string>facebook</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Youtube</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>ywdOBg</string>
+					<key>INEnumValueIndex</key>
+					<integer>5</integer>
+					<key>INEnumValueName</key>
+					<string>youtube</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Reddit</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>nEnGit</string>
+					<key>INEnumValueIndex</key>
+					<integer>6</integer>
+					<key>INEnumValueName</key>
+					<string>reddit</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>LinkedIn</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>WmLuab</string>
+					<key>INEnumValueIndex</key>
+					<integer>7</integer>
+					<key>INEnumValueName</key>
+					<string>linkedin</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Snapchat</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>7CUWjO</string>
+					<key>INEnumValueIndex</key>
+					<integer>8</integer>
+					<key>INEnumValueName</key>
+					<string>snapchat</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Whats App</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>6nGXHn</string>
+					<key>INEnumValueIndex</key>
+					<integer>9</integer>
+					<key>INEnumValueName</key>
+					<string>whatsapp</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Messenger</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>NaJGmw</string>
+					<key>INEnumValueIndex</key>
+					<integer>10</integer>
+					<key>INEnumValueName</key>
+					<string>messenger</string>
+				</dict>
+			</array>
+		</dict>
+	</array>
 	<key>INIntentDefinitionModelVersion</key>
 	<string>1.2</string>
 	<key>INIntentDefinitionNamespace</key>
@@ -26,7 +150,7 @@
 			<key>INIntentDescriptionID</key>
 			<string>9KUP6y</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>1</integer>
+			<integer>2</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
 				<key>appName</key>
@@ -62,19 +186,18 @@
 				<dict>
 					<key>INIntentParameterConfigurable</key>
 					<true/>
+					<key>INIntentParameterCustomDisambiguation</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
 					<string>App Name</string>
 					<key>INIntentParameterDisplayNameID</key>
 					<string>d6B3N0</string>
 					<key>INIntentParameterDisplayPriority</key>
 					<integer>1</integer>
-					<key>INIntentParameterMetadata</key>
-					<dict>
-						<key>INIntentParameterMetadataCapitalization</key>
-						<string>Sentences</string>
-						<key>INIntentParameterMetadataDefaultValueID</key>
-						<string>ZddecV</string>
-					</dict>
+					<key>INIntentParameterEnumType</key>
+					<string>TargetApp</string>
+					<key>INIntentParameterEnumTypeNamespace</key>
+					<string>opCu9p</string>
 					<key>INIntentParameterName</key>
 					<string>appName</string>
 					<key>INIntentParameterPromptDialogs</key>
@@ -95,13 +218,33 @@
 							<key>INIntentParameterPromptDialogType</key>
 							<string>Primary</string>
 						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>There are ${count} options matching ‘${appName}’.</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>eoTbyn</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationIntroduction</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Just to confirm, you wanted ‘${appName}’?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>1YKrHo</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Confirmation</string>
+						</dict>
 					</array>
 					<key>INIntentParameterSupportsResolution</key>
 					<true/>
 					<key>INIntentParameterTag</key>
-					<integer>1</integer>
+					<integer>2</integer>
 					<key>INIntentParameterType</key>
-					<string>String</string>
+					<string>Integer</string>
 				</dict>
 			</array>
 			<key>INIntentResponse</key>
