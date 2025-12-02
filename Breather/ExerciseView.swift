@@ -3,6 +3,7 @@ import SwiftUI
 struct ExerciseView: View {
     
     @EnvironmentObject var state: ExerciseState
+    @StateObject var statsManager = StatsManager.shared
     
     var body: some View {
         VStack(spacing: 40) {
@@ -11,6 +12,14 @@ struct ExerciseView: View {
             
             Text("Take a breath")
                 .font(.largeTitle)
+            
+            VStack(spacing: 8) {
+                Text("\(statsManager.todayAttempts)")
+                    .font(.system(size: 64, weight: .regular, design: .rounded))
+                
+                Text("attempts today")
+                    .foregroundStyle(.secondary)
+            }
             
             Text("You were about to open \(state.appName)")
                 .foregroundStyle(.secondary)

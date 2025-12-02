@@ -18,16 +18,42 @@ struct BreatherApp: App {
 
 struct ContentView: View {
     @EnvironmentObject var exerciseState: ExerciseState
+    @StateObject var statsManager = StatsManager.shared
     
     var body: some View {
         if exerciseState.isActive {
             ExerciseView()
         } else {
-            Text("Breather")
-                .font(.largeTitle)
-                .foregroundStyle(.secondary)
+            VStack(spacing: 24) {
+                Text("Breather")
+                    .font(.largeTitle)
+                    .foregroundStyle(.secondary)
+            
+                
+                VStack(spacing: 8) {
+                    Text("\(statsManager.todayAttempts)")
+                        .font(.system(size: 64, weight: .regular, design: .rounded))
+                    
+                    Text("attempts today")
+                        .foregroundStyle(.secondary)
+                }
+                
+                VStack(spacing: 8) {
+                    Text("\(statsManager.todayBlocked)")
+                        .font(.system(size: 48, weight: .regular, design: .rounded))
+
+                    
+                    Text("blocked")
+                        .foregroundStyle(.secondary)
+                }
+            }
         }
     }
+}
+
+#Preview {
+    ContentView()
+        .environmentObject(ExerciseState.shared)
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate {
