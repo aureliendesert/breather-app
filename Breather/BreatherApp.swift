@@ -22,33 +22,52 @@ struct ContentView: View {
     @EnvironmentObject var exerciseState: ExerciseState
     @StateObject var statsManager = StatsManager.shared
     
-    
     var body: some View {
-        
         if exerciseState.isActive {
             ExerciseView()
         } else {
-            VStack(spacing: 24) {
-                Text("Breather")
-                    .font(.largeTitle)
-                    .foregroundStyle(.secondary)
-            
-                
-                VStack(spacing: 8) {
-                    Text("\(statsManager.todayAttempts)")
-                        .font(.system(size: 64, weight: .regular, design: .rounded))
+            GeometryReader { geometry in
+                ZStack {
+                    Image("BreathingImage")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+//                        .frame(width: 800)
+                        .scaleEffect(5)
+                        .position(
+                            x: geometry.size.width / 2,
+                            y: -100
+                        )
                     
-                    Text("attempts today")
-                        .foregroundStyle(.secondary)
-                }
-                
-                VStack(spacing: 8) {
-                    Text("\(statsManager.todayBlocked)")
-                        .font(.system(size: 48, weight: .regular, design: .rounded))
-
                     
-                    Text("blocked")
-                        .foregroundStyle(.secondary)
+                    VStack() {
+                        Text("Breather")
+                            .font(.custom("PMackinacProMedium", size: 64))
+                            .foregroundStyle(Color(hex: 0xFCF2D7))
+                        
+                        Spacer()
+                            .frame(height: 96)
+                        
+                        VStack(spacing: 8) {
+                            Text("\(statsManager.todayAttempts)")
+                                .font(.custom("PMackinacProMedium", size: 64))
+                                .foregroundStyle(Color(hex: 0xFCF2D7))
+                            
+                            Text("Tentatives d’ouvertures aujourd’hui")
+                                .font(.custom("PMackinacProMedium", size: 16))
+                                .foregroundStyle(Color(hex: 0xFCF2D7, alpha: 0.6))
+                            
+                            Spacer()
+                                .frame(height: 32)
+                            
+                            Text("\(statsManager.todayBlocked)")
+                                .font(.custom("PMackinacProMedium", size: 64))
+                                .foregroundStyle(Color(hex: 0xFCF2D7))
+                            
+                            Text("D’entre elles ont été bloquées")
+                                .font(.custom("PMackinacProMedium", size: 16))
+                                .foregroundStyle(Color(hex: 0xFCF2D7, alpha: 0.6))
+                        }
+                    }
                 }
             }
         }

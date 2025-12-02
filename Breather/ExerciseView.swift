@@ -29,14 +29,13 @@ struct ExerciseView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Main content (shown after breathing)
                 if showContent {
                     contentView
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .transition(.opacity)
                 }
                 
-                // Breathing image overlay (always visible, stays at top after animation)
+
                 Image("BreathingImage")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -47,13 +46,20 @@ struct ExerciseView: View {
                         y: imageYPosition(in: geometry)
                     )
                     .zIndex(-1)
-                
-                // Breathing text (shown only during breathing)
+
                 if !showContent {
-                    Text("Pitié respire un peu")
-                        .font(.custom("PMackinacProMedium", size: 32))
-                        .foregroundStyle(Color(hex: 0xFCF2D7))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    VStack {
+                        Text("Pitié respire un peu")
+                            .font(.custom("PMackinacProMedium", size: 32))
+                            .foregroundStyle(Color(hex: 0xFCF2D7))
+                        
+                        Text("Touche de l'herbe, fais des mots croisés jsp mais fais quelque chose bordel")
+                            .font(.custom("PMackinacProMedium", size: 20))
+                            .multilineTextAlignment(.center)
+                            .padding(24)
+                            .lineSpacing(8)
+                            .foregroundStyle(Color(hex: 0xFCF2D7, alpha: 0.8))
+                    }
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -61,6 +67,7 @@ struct ExerciseView: View {
         .onAppear {
             startBreathingExercise()
         }
+        .background(Color(hex: 0x030302))
     }
     
     private func imageYPosition(in geometry: GeometryProxy) -> CGFloat {
@@ -81,6 +88,7 @@ struct ExerciseView: View {
             Text("Maintenant qu'est-ce qu'on fait?")
                 .font(.custom("P22MackinacProBook", size: 32))
                 .multilineTextAlignment(.center)
+                .lineSpacing(12)
                 .foregroundStyle(Color(hex: 0xFCF2D7))
             
             
@@ -125,9 +133,8 @@ struct ExerciseView: View {
                 .font(.custom("P22MackinacPro-Bold", size: 14))
                 .foregroundStyle(Color(hex: 0xFCF2D7))
             }
-            .padding(.bottom, 40)
+            .padding(.bottom, 32)
         }
-        .padding()
     }
     
     private func startBreathingExercise() {
