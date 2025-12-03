@@ -9,8 +9,6 @@ class ExerciseState: ObservableObject {
     @Published var appName = ""
     var urlScheme: String?
     
-    private var continuation: CheckedContinuation<Bool, Never>?
-    
     // Map of app names to URL schemes
     private let appSchemes: [String: String] = [
         "Instagram": "instagram://",
@@ -30,6 +28,9 @@ class ExerciseState: ObservableObject {
         self.appName = appName
         self.urlScheme = appSchemes[appName]
         self.isActive = true
+        
+        // Notify that a new exercise started (for resetting view state)
+        NotificationCenter.default.post(name: .exerciseDidStart, object: nil)
     }
     
     func complete(openApp: Bool) {
@@ -54,4 +55,8 @@ class ExerciseState: ObservableObject {
         appName = ""
         urlScheme = nil
     }
+}
+
+extension Notification.Name {
+    static let exerciseDidStart = Notification.Name("exerciseDidStart")
 }

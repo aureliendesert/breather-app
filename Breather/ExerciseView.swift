@@ -68,6 +68,10 @@ struct ExerciseView: View {
             resetState()
             startBreathingExercise()
         }
+        .onReceive(NotificationCenter.default.publisher(for: .exerciseDidStart)) { _ in
+            resetState()
+            startBreathingExercise()
+        }
         .background(Color(hex: 0x030302))
     }
     
@@ -108,6 +112,7 @@ struct ExerciseView: View {
                     Text("Il est vrai que tu n'as pas encore ouvert Instagram aujourd'hui...")
                         .font(.custom("PMackinacProMedium", size: 20))
                         .multilineTextAlignment(.center)
+                        .lineSpacing(8)
                         .foregroundStyle(Color(hex: 0xFCF2D7, alpha: 0.8))
                 }
                 
