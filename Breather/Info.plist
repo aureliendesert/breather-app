@@ -2,12 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIAppFonts</key>
-	<array>
-		<string>MackinacBold.otf</string>
-		<string>MackinacMedium.otf</string>
-		<string>MackinacBook.otf</string>
-	</array>
 	<key>INIntentsSupported</key>
 	<array>
 		<string>BreathingExerciseIntent</string>
@@ -15,6 +9,12 @@
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>BreathingExerciseIntent</string>
+	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>MackinacBold.otf</string>
+		<string>MackinacMedium.otf</string>
+		<string>MackinacBook.otf</string>
 	</array>
 </dict>
 </plist>

@@ -21,6 +21,7 @@ struct BreatherApp: App {
 struct ContentView: View {
     @EnvironmentObject var exerciseState: ExerciseState
     @StateObject var statsManager = StatsManager.shared
+    @State private var showStrictMode = false
     
     var body: some View {
         if exerciseState.isActive {
@@ -68,7 +69,23 @@ struct ContentView: View {
                                 .foregroundStyle(Color(hex: 0xFCF2D7, alpha: 0.6))
                         }
                     }
+                    
+                    // Lien Mode Strict positionné en bas (VStack séparé dans le ZStack)
+                    VStack {
+                        Spacer()
+                        
+                        Button(action: { showStrictMode = true }) {
+                            Text("Mode strict")
+                                .font(.custom("PMackinacProMedium", size: 16))
+                                .foregroundStyle(Color(hex: 0xFCF2D7, alpha: 0.8))
+                                .underline()
+                        }
+                        .padding(.bottom, 32)
+                    }
                 }
+            }
+            .sheet(isPresented: $showStrictMode) {
+                StrictModeView()
             }
         }
     }
@@ -128,11 +145,15 @@ class SceneDelegate: NSObject, UIWindowSceneDelegate {
     private func handleUserActivity(_ userActivity: NSUserActivity) {
         print("Handling activity: \(userActivity.activityType)")
         
+        // Extract duration from userInfo (default to 8.0 if not provided)
+        let duration = userActivity.userInfo?["duration"] as? Double ?? 8.0
+        let strictMode = userActivity.userInfo?["strictMode"] as? Bool ?? false
+        
         // First try to get appName from userInfo (we put it there as a String)
         if let appName = userActivity.userInfo?["appName"] as? String {
-            print("Found appName in userInfo: \(appName)")
+            print("Found appName in userInfo: \(appName), duration: \(duration), strictMode: \(strictMode)")
             Task { @MainActor in
-                ExerciseState.shared.startExercise(appName: appName)
+                ExerciseState.shared.startExercise(appName: appName, duration: duration, strictMode: strictMode)
             }
             return
         }
@@ -140,9 +161,9 @@ class SceneDelegate: NSObject, UIWindowSceneDelegate {
         // Fallback: get from intent and convert to string
         if let intent = userActivity.interaction?.intent as? BreathingExerciseIntent {
             let appName = displayName(for: intent.appName)
-            print("Found appName from intent: \(appName)")
+            print("Found appName from intent: \(appName), duration: \(duration), strictMode: \(strictMode)")
             Task { @MainActor in
-                ExerciseState.shared.startExercise(appName: appName)
+                ExerciseState.shared.startExercise(appName: appName, duration: duration, strictMode: strictMode)
             }
         }
     }

@@ -1,64 +1,86 @@
 import SwiftUI
 
 struct StrictModeView: View {
+    @Environment(\.dismiss) var dismiss
     @StateObject var strictModeManager = StrictModeManager.shared
     @State private var showingAddRule = false
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                Color(hex: 0x030302)
-                    .ignoresSafeArea()
-                
-                VStack(spacing: 0) {
-                    // Toggle du mode strict global
-                    VStack(spacing: 16) {
-                        Toggle(isOn: Binding(
-                            get: { strictModeManager.isStrictModeEnabled },
-                            set: { _ in strictModeManager.toggleStrictMode() }
-                        )) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Mode Strict")
-                                    .font(.custom("P22MackinacPro-Bold", size: 20))
-                                    .foregroundStyle(Color(hex: 0xFCF2D7))
-                                
-                                Text("Bloquer les apps pendant certaines heures")
-                                    .font(.custom("PMackinacProMedium", size: 14))
-                                    .foregroundStyle(Color(hex: 0xFCF2D7, alpha: 0.6))
-                            }
-                        }
-                        .toggleStyle(SwitchToggleStyle(tint: Color(hex: 0xFCF2D7)))
-                        .padding()
-                        .background(Color(hex: 0xFCF2D7, alpha: 0.1))
-                        .cornerRadius(12)
+        ZStack {
+            Color(hex: 0x030302)
+                .ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                // Header
+                HStack {
+                    Button(action: { dismiss() }) {
+                        Text("Fermer")
+                            .font(.custom("PMackinacProMedium", size: 16))
+                            .foregroundStyle(Color(hex: 0xFCF2D7))
                     }
-                    .padding()
+                    .frame(width: 100, alignment: .leading)
+                    
+                    Spacer()
+                    
+                    Text("Mode Strict")
+                        .font(.custom("PMackinacProMedium", size: 20))
+                        .foregroundStyle(Color(hex: 0xFCF2D7))
+                    
+                    Spacer()
                     
                     if strictModeManager.isStrictModeEnabled {
-                        // Liste des règles
-                        if strictModeManager.rules.isEmpty {
-                            emptyStateView
-                        } else {
-                            rulesListView
-                        }
-                    }
-                }
-            }
-            .navigationTitle("Mode Strict")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                if strictModeManager.isStrictModeEnabled {
-                    ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: { showingAddRule = true }) {
-                            Image(systemName: "plus.circle.fill")
+                            Text("Ajouter")
+                                .font(.custom("PMackinacProMedium", size: 16))
                                 .foregroundStyle(Color(hex: 0xFCF2D7))
                         }
+                        .frame(width: 100, alignment: .trailing)
+                    } else {
+                        Text("Ajouter")
+                            .font(.custom("PMackinacProMedium", size: 16))
+                            .foregroundStyle(Color(hex: 0xFCF2D7, alpha: 0.3))
+                            .frame(width: 100, alignment: .trailing)
+                    }
+                }
+                .padding(.horizontal, 32)
+                .padding(.vertical, 20)
+                
+                ScrollView {
+                    VStack(spacing: 24) {
+                        // Toggle du mode strict global
+                        VStack(spacing: 16) {
+                            Toggle(isOn: Binding(
+                                get: { strictModeManager.isStrictModeEnabled },
+                                set: { _ in strictModeManager.toggleStrictMode() }
+                            )) {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("Activer le mode strict")
+                                        .font(.custom("PMackinacProMedium", size: 18))
+                                        .foregroundStyle(Color(hex: 0xFCF2D7))
+                                    
+                                    Text("Bloquer les apps pendant certaines heures")
+                                        .font(.custom("PMackinacProMedium", size: 14))
+                                        .foregroundStyle(Color(hex: 0xFCF2D7, alpha: 0.6))
+                                }
+                            }
+                            .toggleStyle(SwitchToggleStyle(tint: Color(hex: 0xFCF2D7)))
+                        }
+                        .padding()
+                        
+                        if strictModeManager.isStrictModeEnabled {
+                            // Liste des règles
+                            if strictModeManager.rules.isEmpty {
+                                emptyStateView
+                            } else {
+                                rulesListView
+                            }
+                        }
                     }
                 }
             }
-            .sheet(isPresented: $showingAddRule) {
-                AddRuleView()
-            }
+        }
+        .sheet(isPresented: $showingAddRule) {
+            AddRuleView()
         }
     }
     
@@ -66,15 +88,11 @@ struct StrictModeView: View {
         VStack(spacing: 24) {
             Spacer()
             
-            Image(systemName: "clock.badge.xmark")
-                .font(.system(size: 64))
-                .foregroundStyle(Color(hex: 0xFCF2D7, alpha: 0.3))
-            
             Text("Aucune règle de blocage")
-                .font(.custom("P22MackinacProBook", size: 24))
+                .font(.custom("PMackinacProMedium", size: 24))
                 .foregroundStyle(Color(hex: 0xFCF2D7))
             
-            Text("Appuyez sur + pour ajouter une règle")
+            Text("Appuyez sur Ajouter pour créer une règle")
                 .font(.custom("PMackinacProMedium", size: 16))
                 .foregroundStyle(Color(hex: 0xFCF2D7, alpha: 0.6))
             
@@ -84,14 +102,12 @@ struct StrictModeView: View {
     }
     
     private var rulesListView: some View {
-        ScrollView {
-            VStack(spacing: 12) {
-                ForEach(strictModeManager.rules) { rule in
-                    RuleRowView(rule: rule)
-                }
+        VStack(spacing: 16) {
+            ForEach(strictModeManager.rules) { rule in
+                RuleRowView(rule: rule)
             }
-            .padding()
         }
+        .padding()
     }
 }
 
@@ -101,36 +117,23 @@ struct RuleRowView: View {
     
     var body: some View {
         HStack(spacing: 16) {
-            // Icône de l'app
-            VStack(spacing: 4) {
-                Text(appEmoji(for: rule.appName))
-                    .font(.system(size: 32))
-                
+            // Info de l'app et horaire
+            VStack(alignment: .leading, spacing: 8) {
                 Text(rule.appName)
-                    .font(.custom("PMackinacProMedium", size: 12))
-                    .foregroundStyle(Color(hex: 0xFCF2D7, alpha: 0.8))
-            }
-            .frame(width: 80)
-            
-            // Plage horaire
-            VStack(alignment: .leading, spacing: 4) {
-                Text(rule.timeRangeDescription)
-                    .font(.custom("P22MackinacPro-Bold", size: 18))
+                    .font(.custom("PMackinacProMedium", size: 20))
                     .foregroundStyle(Color(hex: 0xFCF2D7))
                 
+                Text(rule.timeRangeDescription)
+                    .font(.custom("PMackinacProMedium", size: 16))
+                    .foregroundStyle(Color(hex: 0xFCF2D7, alpha: 0.8))
+                
                 if rule.isCurrentlyBlocked() {
-                    HStack(spacing: 4) {
-                        Circle()
-                            .fill(Color.red)
-                            .frame(width: 8, height: 8)
-                        
-                        Text("Bloqué maintenant")
-                            .font(.custom("PMackinacProMedium", size: 12))
-                            .foregroundStyle(Color.red)
-                    }
+                    Text("🔴 Bloqué maintenant")
+                        .font(.custom("PMackinacProMedium", size: 14))
+                        .foregroundStyle(Color.red)
                 } else {
                     Text("Inactif")
-                        .font(.custom("PMackinacProMedium", size: 12))
+                        .font(.custom("PMackinacProMedium", size: 14))
                         .foregroundStyle(Color(hex: 0xFCF2D7, alpha: 0.5))
                 }
             }
@@ -146,30 +149,14 @@ struct RuleRowView: View {
             .labelsHidden()
         }
         .padding()
-        .background(Color(hex: 0xFCF2D7, alpha: 0.1))
-        .cornerRadius(12)
-        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+        .background(Color(hex: 0xFCF2D7, alpha: 0.05))
+        .cornerRadius(8)
+        .contextMenu {
             Button(role: .destructive) {
                 strictModeManager.deleteRule(rule)
             } label: {
                 Label("Supprimer", systemImage: "trash")
             }
-        }
-    }
-    
-    private func appEmoji(for appName: String) -> String {
-        switch appName {
-        case "Instagram": return "📷"
-        case "TikTok": return "🎵"
-        case "X (Twitter)": return "🐦"
-        case "Facebook": return "👥"
-        case "YouTube": return "📺"
-        case "Reddit": return "🤓"
-        case "LinkedIn": return "💼"
-        case "Snapchat": return "👻"
-        case "WhatsApp": return "💬"
-        case "Messenger": return "💬"
-        default: return "📱"
         }
     }
 }
@@ -183,27 +170,55 @@ struct AddRuleView: View {
     @State private var startMinute = 0
     @State private var endHour = 7
     @State private var endMinute = 0
-    @State private var showPresets = false
     
     let availableApps = ["Instagram", "TikTok", "X (Twitter)", "Facebook", "YouTube", "Reddit", "LinkedIn", "Snapchat", "WhatsApp", "Messenger"]
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                Color(hex: 0x030302)
-                    .ignoresSafeArea()
+        ZStack {
+            Color(hex: 0x030302)
+                .ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                // Header
+                HStack {
+                    Button("Annuler") {
+                        dismiss()
+                    }
+                    .font(.custom("PMackinacProMedium", size: 16))
+                    .foregroundStyle(Color(hex: 0xFCF2D7))
+                    .frame(width: 100, alignment: .leading)
+                    
+                    Spacer()
+                    
+                    Text("Nouvelle règle")
+                        .font(.custom("PMackinacProMedium", size: 20))
+                        .foregroundStyle(Color(hex: 0xFCF2D7))
+                    
+                    Spacer()
+                    
+                    Button("Créer") {
+                        addRule()
+                    }
+                    .font(.custom("PMackinacProMedium", size: 16))
+                    .foregroundStyle(Color(hex: 0xFCF2D7))
+                    .frame(width: 100, alignment: .trailing)
+                }
+                .padding(.horizontal, 32)
+                .padding(.vertical, 20)
                 
                 ScrollView {
-                    VStack(spacing: 24) {
+                    VStack(spacing: 32) {
                         // Sélection de l'app
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Application")
-                                .font(.custom("P22MackinacPro-Bold", size: 16))
+                                .font(.custom("PMackinacProMedium", size: 16))
                                 .foregroundStyle(Color(hex: 0xFCF2D7))
                             
                             Picker("Application", selection: $selectedApp) {
                                 ForEach(availableApps, id: \.self) { app in
-                                    Text(app).tag(app)
+                                    Text(app)
+                                        .font(.custom("PMackinacProMedium", size: 18))
+                                        .tag(app)
                                 }
                             }
                             .pickerStyle(.wheel)
@@ -213,76 +228,77 @@ struct AddRuleView: View {
                         // Règles prédéfinies
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Règles prédéfinies")
-                                .font(.custom("P22MackinacPro-Bold", size: 16))
+                                .font(.custom("PMackinacProMedium", size: 16))
                                 .foregroundStyle(Color(hex: 0xFCF2D7))
                             
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 12) {
-                                    PresetButton(title: "Heures de travail", subtitle: "9h-17h") {
-                                        startHour = 9
-                                        startMinute = 0
-                                        endHour = 17
-                                        endMinute = 0
-                                    }
-                                    
-                                    PresetButton(title: "Nuit", subtitle: "22h-7h") {
-                                        startHour = 22
-                                        startMinute = 0
-                                        endHour = 7
-                                        endMinute = 0
-                                    }
-                                    
-                                    PresetButton(title: "Matin", subtitle: "6h-9h") {
-                                        startHour = 6
-                                        startMinute = 0
-                                        endHour = 9
-                                        endMinute = 0
-                                    }
-                                    
-                                    PresetButton(title: "24/7", subtitle: "Toujours") {
-                                        startHour = 0
-                                        startMinute = 0
-                                        endHour = 23
-                                        endMinute = 59
-                                    }
+                            VStack(spacing: 12) {
+                                PresetButton(title: "Heures de travail (9h-17h)") {
+                                    startHour = 9
+                                    startMinute = 0
+                                    endHour = 17
+                                    endMinute = 0
                                 }
-                                .padding(.horizontal)
+                                
+                                PresetButton(title: "Nuit (22h-7h)") {
+                                    startHour = 22
+                                    startMinute = 0
+                                    endHour = 7
+                                    endMinute = 0
+                                }
+                                
+                                PresetButton(title: "Matin (6h-9h)") {
+                                    startHour = 6
+                                    startMinute = 0
+                                    endHour = 9
+                                    endMinute = 0
+                                }
+                                
+                                PresetButton(title: "Toute la journée (24/7)") {
+                                    startHour = 0
+                                    startMinute = 0
+                                    endHour = 23
+                                    endMinute = 59
+                                }
                             }
                         }
                         
                         // Personnalisation des heures
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("Personnaliser")
-                                .font(.custom("P22MackinacPro-Bold", size: 16))
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Ou personnaliser")
+                                .font(.custom("PMackinacProMedium", size: 16))
                                 .foregroundStyle(Color(hex: 0xFCF2D7))
                             
-                            HStack(spacing: 16) {
+                            HStack(spacing: 32) {
                                 // Heure de début
                                 VStack(alignment: .leading, spacing: 8) {
                                     Text("Début")
                                         .font(.custom("PMackinacProMedium", size: 14))
                                         .foregroundStyle(Color(hex: 0xFCF2D7, alpha: 0.6))
                                     
-                                    HStack {
+                                    HStack(spacing: 8) {
                                         Picker("Heure", selection: $startHour) {
                                             ForEach(0..<24) { hour in
-                                                Text(String(format: "%02d", hour)).tag(hour)
+                                                Text(String(format: "%02d", hour))
+                                                    .font(.custom("PMackinacProMedium", size: 18))
+                                                    .tag(hour)
                                             }
                                         }
                                         .pickerStyle(.wheel)
-                                        .frame(width: 60)
+                                        .frame(width: 60, height: 100)
                                         
                                         Text(":")
-                                            .font(.custom("P22MackinacPro-Bold", size: 24))
+                                            .font(.custom("PMackinacProMedium", size: 24))
                                             .foregroundStyle(Color(hex: 0xFCF2D7))
                                         
                                         Picker("Minute", selection: $startMinute) {
                                             ForEach(0..<60) { minute in
-                                                Text(String(format: "%02d", minute)).tag(minute)
+                                                Text(String(format: "%02d", minute))
+                                                    .font(.custom("PMackinacProMedium", size: 18))
+                                                    .tag(minute)
                                             }
                                         }
                                         .pickerStyle(.wheel)
-                                        .frame(width: 60)
+                                        .frame(width: 60, height: 100)
                                     }
                                 }
                                 
@@ -292,54 +308,36 @@ struct AddRuleView: View {
                                         .font(.custom("PMackinacProMedium", size: 14))
                                         .foregroundStyle(Color(hex: 0xFCF2D7, alpha: 0.6))
                                     
-                                    HStack {
+                                    HStack(spacing: 8) {
                                         Picker("Heure", selection: $endHour) {
                                             ForEach(0..<24) { hour in
-                                                Text(String(format: "%02d", hour)).tag(hour)
+                                                Text(String(format: "%02d", hour))
+                                                    .font(.custom("PMackinacProMedium", size: 18))
+                                                    .tag(hour)
                                             }
                                         }
                                         .pickerStyle(.wheel)
-                                        .frame(width: 60)
+                                        .frame(width: 60, height: 100)
                                         
                                         Text(":")
-                                            .font(.custom("P22MackinacPro-Bold", size: 24))
+                                            .font(.custom("PMackinacProMedium", size: 24))
                                             .foregroundStyle(Color(hex: 0xFCF2D7))
                                         
                                         Picker("Minute", selection: $endMinute) {
                                             ForEach(0..<60) { minute in
-                                                Text(String(format: "%02d", minute)).tag(minute)
+                                                Text(String(format: "%02d", minute))
+                                                    .font(.custom("PMackinacProMedium", size: 18))
+                                                    .tag(minute)
                                             }
                                         }
                                         .pickerStyle(.wheel)
-                                        .frame(width: 60)
+                                        .frame(width: 60, height: 100)
                                     }
                                 }
                             }
                         }
-                        
-                        // Bouton de création
-                        Button(action: addRule) {
-                            Text("Créer la règle")
-                                .font(.custom("P22MackinacPro-Bold", size: 16))
-                                .foregroundStyle(Color(hex: 0x030302))
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color(hex: 0xFCF2D7))
-                                .cornerRadius(12)
-                        }
-                        .padding(.top, 24)
                     }
                     .padding()
-                }
-            }
-            .navigationTitle("Nouvelle règle")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Annuler") {
-                        dismiss()
-                    }
-                    .foregroundStyle(Color(hex: 0xFCF2D7))
                 }
             }
         }
@@ -360,24 +358,17 @@ struct AddRuleView: View {
 
 struct PresetButton: View {
     let title: String
-    let subtitle: String
     let action: () -> Void
     
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 4) {
-                Text(title)
-                    .font(.custom("P22MackinacPro-Bold", size: 14))
-                    .foregroundStyle(Color(hex: 0x030302))
-                
-                Text(subtitle)
-                    .font(.custom("PMackinacProMedium", size: 12))
-                    .foregroundStyle(Color(hex: 0x030302, alpha: 0.7))
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .background(Color(hex: 0xFCF2D7))
-            .cornerRadius(8)
+            Text(title)
+                .font(.custom("PMackinacProMedium", size: 16))
+                .foregroundStyle(Color(hex: 0x030302))
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color(hex: 0xFCF2D7))
+                .cornerRadius(8)
         }
     }
 }

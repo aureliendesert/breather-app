@@ -55,7 +55,7 @@ struct BlockingRule: Codable, Identifiable {
     }
 }
 
-@MainActor
+// Supprime @MainActor pour permettre l'accès synchrone depuis IntentHandler
 class StrictModeManager: ObservableObject {
     
     static let shared = StrictModeManager()
@@ -71,7 +71,7 @@ class StrictModeManager: ObservableObject {
         isStrictModeEnabled = UserDefaults.standard.bool(forKey: enabledKey)
     }
     
-    // Vérifie si une app est bloquée en mode strict
+    // Vérifie si une app est bloquée en mode strict (accessible de n'importe quel contexte)
     func isAppBlockedInStrictMode(appName: String) -> Bool {
         guard isStrictModeEnabled else { return false }
         
@@ -90,18 +90,21 @@ class StrictModeManager: ObservableObject {
     }
     
     // Ajoute une règle
+    @MainActor
     func addRule(_ rule: BlockingRule) {
         rules.append(rule)
         saveRules()
     }
     
     // Supprime une règle
+    @MainActor
     func deleteRule(_ rule: BlockingRule) {
         rules.removeAll { $0.id == rule.id }
         saveRules()
     }
     
     // Active/désactive une règle
+    @MainActor
     func toggleRule(_ rule: BlockingRule) {
         if let index = rules.firstIndex(where: { $0.id == rule.id }) {
             let updatedRule = BlockingRule(
@@ -119,12 +122,14 @@ class StrictModeManager: ObservableObject {
     }
     
     // Active/désactive le mode strict global
+    @MainActor
     func toggleStrictMode() {
         isStrictModeEnabled.toggle()
         UserDefaults.standard.set(isStrictModeEnabled, forKey: enabledKey)
     }
     
     // Règles prédéfinies communes
+    @MainActor
     func addPresetRule(_ preset: PresetRule) {
         let rule: BlockingRule
         
