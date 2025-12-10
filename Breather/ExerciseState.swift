@@ -16,6 +16,7 @@ class ExerciseState: ObservableObject {
         "Instagram": "instagram://",
         "Twitter": "twitter://",
         "X": "twitter://",
+        "X (Twitter)": "twitter://",
         "TikTok": "tiktok://",
         "Facebook": "fb://",
         "YouTube": "youtube://",
@@ -27,8 +28,10 @@ class ExerciseState: ObservableObject {
     ]
     
     func startExercise(appName: String, duration: Double = 8.0, strictMode: Bool = false) {
+        print("🚀 ExerciseState.startExercise - appName: \(appName)")
         self.appName = appName
         self.urlScheme = appSchemes[appName]
+        print("🔗 URL Scheme found: \(urlScheme ?? "nil")")
         self.breathDuration = duration
         self.isStrictMode = strictMode
         self.isActive = true
@@ -38,6 +41,8 @@ class ExerciseState: ObservableObject {
     }
     
     func complete(openApp: Bool) {
+        print("✅ ExerciseState.complete - openApp: \(openApp), appName: \(appName), urlScheme: \(urlScheme ?? "nil")")
+        
         // En mode strict, on ne peut PAS ouvrir l'app
         if isStrictMode {
             // Record the blocked attempt
@@ -57,7 +62,12 @@ class ExerciseState: ObservableObject {
                 
                 // Open the app
                 if let scheme = urlScheme, let url = URL(string: scheme) {
-                    UIApplication.shared.open(url)
+                    print("🌐 Opening URL: \(url.absoluteString)")
+                    UIApplication.shared.open(url, options: [:]) { success in
+                        print("📱 URL open result: \(success)")
+                    }
+                } else {
+                    print("❌ No URL scheme found for \(appName)")
                 }
             } else {
                 // "I'm good" - go to home screen
