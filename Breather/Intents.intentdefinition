@@ -133,11 +133,11 @@
 	<key>INIntentDefinitionNamespace</key>
 	<string>opCu9p</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>24G90</string>
+	<string>25B78</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>16F6</string>
+	<string>17B100</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>16.4</string>
+	<string>26.1.1</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -150,10 +150,10 @@
 			<key>INIntentDescriptionID</key>
 			<string>9KUP6y</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>2</integer>
+			<integer>7</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>appName</key>
+				<key>appName,duration</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
@@ -169,16 +169,18 @@
 			<string>BreathingExercise</string>
 			<key>INIntentParameterCombinations</key>
 			<dict>
-				<key>appName</key>
+				<key>appName,duration</key>
 				<dict>
 					<key>INIntentParameterCombinationIsLinked</key>
+					<true/>
+					<key>INIntentParameterCombinationIsPrimary</key>
 					<true/>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
 					<string>Breathe before opening ${appName}</string>
 					<key>INIntentParameterCombinationTitleID</key>
-					<string>YKERsz</string>
+					<string>Pv3XLc</string>
 				</dict>
 			</dict>
 			<key>INIntentParameters</key>
@@ -245,6 +247,56 @@
 					<integer>2</integer>
 					<key>INIntentParameterType</key>
 					<string>Integer</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
+					<key>INIntentParameterDisplayName</key>
+					<string>Durée</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>rFv53y</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>2</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataDefaultUnit</key>
+						<string>Seconds</string>
+						<key>INIntentParameterMetadataDefaultValue</key>
+						<real>10</real>
+						<key>INIntentParameterMetadataMaximumUnit</key>
+						<string>Days</string>
+						<key>INIntentParameterMetadataMaximumValue</key>
+						<real>120</real>
+						<key>INIntentParameterMetadataMinimumUnit</key>
+						<string>Seconds</string>
+						<key>INIntentParameterMetadataUnit</key>
+						<string>Seconds</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>duration</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Configuration</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Combien de temps veux-tu respirer ? </string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>GbzVuj</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterTag</key>
+					<integer>7</integer>
+					<key>INIntentParameterType</key>
+					<string>TimeInterval</string>
 				</dict>
 			</array>
 			<key>INIntentResponse</key>

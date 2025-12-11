@@ -22,8 +22,13 @@ struct ExerciseView: View {
     @State private var imageScale: CGFloat = 2.0
     @State private var showContent = false
     
-    private let breathInDuration: Double = 8.0
-    private let breathOutDuration: Double = 8.0
+    // Durées dynamiques basées sur l'état
+    private var breathInDuration: Double {
+        state.breathDuration
+    }
+    private var breathOutDuration: Double {
+        state.breathDuration
+    }
     private let maxScale: CGFloat = 4.0
     
     var body: some View {
@@ -125,29 +130,65 @@ struct ExerciseView: View {
             }
             
             VStack(spacing: 16) {
-                Button("Résister à la tentation") {
-                    HapticsManager.shared.playSuccess()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        state.complete(openApp: false)
+                if state.isStrictMode {
+                    // Mode strict : un seul bouton
+                    VStack(spacing: 12) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "lock.shield.fill")
+                                .foregroundStyle(Color.red)
+                            Text("Mode Strict Activé")
+                                .font(.custom("P22MackinacPro-Bold", size: 16))
+                                .foregroundStyle(Color.red)
+                        }
+                        .padding(.bottom, 8)
+                        
+                        if let rule = StrictModeManager.shared.activeRule(for: state.appName) {
+                            Text("Cette app est bloquée jusqu'à \(String(format: "%02d:%02d", rule.endHour, rule.endMinute))")
+                                .font(.custom("PMackinacProMedium", size: 14))
+                                .foregroundStyle(Color(hex: 0xFCF2D7, alpha: 0.8))
+                                .multilineTextAlignment(.center)
+                        }
+                        
+                        Button("Retourner à l'accueil") {
+                            HapticsManager.shared.playSuccess()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                state.complete(openApp: false)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .padding(EdgeInsets(top: 16, leading: 24, bottom: 16, trailing: 24))
+                        .bold()
+                        .foregroundStyle(Color(hex: 0x030302))
+                        .background(Color(hex: 0xFCF2D7))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .font(.custom("P22MackinacPro-Bold", size: 14))
                     }
-                }
-                .buttonStyle(.plain)
-                .padding(EdgeInsets(top: 16, leading: 24, bottom: 16, trailing: 24))
-                .bold()
-                .foregroundStyle(Color(hex: 0x030302))
-                .background(Color(hex: 0xFCF2D7))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .font(.custom("P22MackinacPro-Bold", size: 14))
-                
-                Button("Ok pour cette fois...") {
-                    HapticsManager.shared.playTap()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        state.complete(openApp: true)
+                } else {
+                    // Mode normal : deux boutons
+                    Button("Résister à la tentation") {
+                        HapticsManager.shared.playSuccess()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            state.complete(openApp: false)
+                        }
                     }
+                    .buttonStyle(.plain)
+                    .padding(EdgeInsets(top: 16, leading: 24, bottom: 16, trailing: 24))
+                    .bold()
+                    .foregroundStyle(Color(hex: 0x030302))
+                    .background(Color(hex: 0xFCF2D7))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .font(.custom("P22MackinacPro-Bold", size: 14))
+                    
+                    Button("Ok pour cette fois...") {
+                        HapticsManager.shared.playTap()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            state.complete(openApp: true)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    .font(.custom("P22MackinacPro-Bold", size: 14))
+                    .foregroundStyle(Color(hex: 0xFCF2D7))
                 }
-                .buttonStyle(.plain)
-                .font(.custom("P22MackinacPro-Bold", size: 14))
-                .foregroundStyle(Color(hex: 0xFCF2D7))
             }
             .padding(.bottom, 32)
         }
@@ -157,6 +198,15 @@ struct ExerciseView: View {
         // Play blocked haptic immediately
         HapticsManager.shared.playBlocked()
         
+        // Mode strict : pas d'animation, affiche direct le contenu
+        if state.isStrictMode || breathInDuration == 0 {
+            withAnimation(.easeIn(duration: 0.3)) {
+                showContent = true
+            }
+            return
+        }
+        
+        // Mode normal : animation de respiration
         // Breath in - image rises from bottom to top, scales up then down
         withAnimation(.easeInOut(duration: breathInDuration)) {
             breathProgress = 1.0
