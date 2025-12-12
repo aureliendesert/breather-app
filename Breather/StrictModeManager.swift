@@ -103,6 +103,24 @@ class StrictModeManager: ObservableObject {
         saveRules()
     }
     
+    // Met à jour une règle
+    @MainActor
+    func updateRule(_ rule: BlockingRule, appName: String, startHour: Int, startMinute: Int, endHour: Int, endMinute: Int) {
+        if let index = rules.firstIndex(where: { $0.id == rule.id }) {
+            let updatedRule = BlockingRule(
+                id: rule.id,
+                appName: appName,
+                startHour: startHour,
+                startMinute: startMinute,
+                endHour: endHour,
+                endMinute: endMinute,
+                isEnabled: rule.isEnabled
+            )
+            rules[index] = updatedRule
+            saveRules()
+        }
+    }
+    
     // Active/désactive une règle
     @MainActor
     func toggleRule(_ rule: BlockingRule) {
