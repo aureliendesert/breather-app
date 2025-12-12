@@ -4,16 +4,4 @@
    <FileRef
       location = "self:">
    </FileRef>
-   <FileRef
-      location = "group:AMELIORATIONS_MODE_STRICT.md">
-   </FileRef>
-   <FileRef
-      location = "group:AMELIORATIONS_V2_MODE_STRICT.md">
-   </FileRef>
-   <FileRef
-      location = "group:CORRECTIONS_FINALES_MODE_STRICT.md">
-   </FileRef>
-   <FileRef
-      location = "group:CORRECTION_BUG_CHANGEMENT_PRESET.md">
-   </FileRef>
 </Workspace>
